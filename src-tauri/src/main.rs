@@ -10,13 +10,23 @@ use serde_json::json;
 
 static URL: Lazy<RwLock<String>> = Lazy::new(|| RwLock::new("".to_string()));
 
+fn extract_noteid(note_id: String) -> String {
+    let tempid: Vec<&str> = note_id.split('/').collect();
+    if tempid.len() == 5 {
+        tempid[4].to_string()
+    } else {
+        note_id
+    }
+}
+
 #[tauri::command]
 async fn get_note(note_id: String) -> String {
+    let extracted_note_id: String = extract_noteid(note_id);
     let client: reqwest::Client = reqwest::Client::new();
     let url: String = URL.read().unwrap().clone();
     let res: Note = client
         .post(&format!("{}api/notes/show", url))
-        .json(&json!({ "noteId": note_id }))
+        .json(&json!({ "noteId": extracted_note_id }))
         .send()
         .await.unwrap()
         .json()
