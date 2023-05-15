@@ -37,12 +37,13 @@ async fn get_note(note_id: String) -> String {
 #[tauri::command]
 fn set_url(instanceurl: String) {
     let temp_url: String = match instanceurl.as_str() {
-        "https://" =>
-            if instanceurl.ends_with("/") {
-                instanceurl.clone()
+        s if s.starts_with("https://") => {
+            if instanceurl.ends_with('/') {
+                instanceurl
             } else {
-                instanceurl.clone() + "/"
-            },
+                instanceurl + "/"
+            }
+        }
         _ => {
             if instanceurl.ends_with('/') {
                 "https://".to_owned() + &instanceurl
