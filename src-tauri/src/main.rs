@@ -46,9 +46,9 @@ fn set_url(instanceurl: String) {
         }
         _ => {
             if instanceurl.ends_with('/') {
-                "https://".to_owned() + &instanceurl
+                "https://".to_string() + &instanceurl
             } else {
-                "https://".to_owned() + &instanceurl + "/"
+                "https://".to_string() + &instanceurl + "/"
             }
         }
     };

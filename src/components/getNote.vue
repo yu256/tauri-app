@@ -24,5 +24,15 @@ async function getNote() {
     <button type="button" @click="getNote()">Get</button>
   </div>
 
-  <p>{{ note }}</p>
+  <p v-if="note">
+    {{ note }}
+  </p>
 </template>
+
+<style scoped>
+p {
+  padding: 1em;
+  border: solid;
+  border-radius: 2em;
+}
+</style>
