@@ -23,7 +23,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.yu256.try-tauri",
       "targets": "all"
     },
     "security": {
