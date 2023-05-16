@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::sync::RwLock;
+use std::collections::HashMap;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -20,7 +21,7 @@ fn extract_noteid(note_id: String) -> String {
 }
 
 #[tauri::command]
-async fn get_note(note_id: String) -> String {
+async fn get_note(note_id: String) -> (String, HashMap<String, usize>) {
     let extracted_note_id: String = extract_noteid(note_id);
     let client: reqwest::Client = reqwest::Client::new();
     let url: String = URL.read().unwrap().clone();
@@ -31,7 +32,7 @@ async fn get_note(note_id: String) -> String {
         .await.unwrap()
         .json()
         .await.unwrap();
-    res.text
+    (res.text, res.reactions)
 }
 
 #[tauri::command]
@@ -59,6 +60,7 @@ fn set_url(instanceurl: String) {
 #[serde(rename_all = "camelCase")]
 struct Note {
     text: String,
+    reactions: HashMap<String, usize>,
 }
 
 fn main() {

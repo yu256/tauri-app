@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { shallowRef } from "vue";
+import { shallowRef, reactive } from "vue";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const note = shallowRef("");
 const name = shallowRef("");
 const url = shallowRef("");
+let reactions = reactive(new Map<string, number>())
 
 function setURL() {
   invoke("set_url", { instanceurl: url.value });
 }
 
 async function getNote() {
-  note.value = await invoke("get_note", { noteId: name.value });
+  [note.value, reactions] = await invoke<[string, Map<string, number>]>('get_note', { noteId: name.value });
 }
 </script>
 
@@ -26,6 +27,7 @@ async function getNote() {
 
   <p v-if="note">
     {{ note }}
+    {{ reactions }}
   </p>
 </template>
 
