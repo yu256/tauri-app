@@ -14,10 +14,10 @@
       </div>
       {{ user.name }} {{ user.username }}@{{ user.host }}<br>{{ note }}<br>{{ createdAt }}
     </div>
-    <div v-for="(count, reaction) in reactions" :key="reaction">
-      <img class="customemojis" v-if="isCustomEmoji(reaction)" :src="getCustomEmojiURL(reaction).url"
+    <div class="emojis" v-for="(count, reaction) in reactions" :key="reaction">
+      <img v-if="isCustomEmoji(reaction)" :src="getCustomEmojiURL(reaction).url"
         :alt="getCustomEmojiURL(reaction).alt">
-      <span class="unicodeemojis" v-else>{{ reaction }}</span>
+      <span v-else>{{ reaction }}</span>
       {{ count }}
     </div>
   </div>
@@ -95,12 +95,9 @@ img {
   overflow: clip;
 }
 
-.customemojis {
+.emojis {
   width: 3em;
   height: 3em;
-}
-
-.unicodeemojis {
   font-size: 3em;
 }
 </style>
