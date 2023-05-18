@@ -7,21 +7,19 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-
 static URL: Lazy<RwLock<String>> = Lazy::new(|| RwLock::new("".to_string()));
 
 fn extract_noteid(note_id: String) -> String {
-    let tempid: Vec<&str> = note_id.split('/').collect();
-    if tempid.len() == 5 {
-        tempid[4].to_string()
+    let temp_id: Vec<&str> = note_id.split('/').collect();
+    if temp_id.len() == 5 {
+        temp_id[4].to_string()
     } else {
         note_id
     }
 }
 
 #[tauri::command]
-async fn get_note(note_id: String) -> (String, HashMap<String, usize>) {
+async fn get_note(note_id: String) -> (String, User, String, HashMap<String, usize>, Vec<HashMap<String, String>>) {
     let extracted_note_id: String = extract_noteid(note_id);
     let client: reqwest::Client = reqwest::Client::new();
     let url: String = URL.read().unwrap().clone();
@@ -32,7 +30,7 @@ async fn get_note(note_id: String) -> (String, HashMap<String, usize>) {
         .await.unwrap()
         .json()
         .await.unwrap();
-    (res.text, res.reactions)
+    (res.createdAt, res.user, res.text, res.reactions, res.emojis)
 }
 
 #[tauri::command]
@@ -58,9 +56,35 @@ fn set_url(instanceurl: String) {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[allow(non_snake_case)]
 struct Note {
+    createdAt: String,
+    user: User,
     text: String,
     reactions: HashMap<String, usize>,
+    emojis: Vec<HashMap<String, String>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_snake_case)]
+struct User {
+    username: String,
+    host: Option<String>,
+    name: String,
+    avatarUrl: String,
+    instance: Option<Instance>,
+    onlineStatus: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_snake_case)]
+struct Instance {
+    name: String,
+    softwareName: String,
+    softwareVersion: String,
+    iconUrl: String,
+    faviconUrl: String,
+    themeColor: String,
 }
 
 fn main() {
