@@ -23,9 +23,11 @@ async fn get_note(note_id: String) -> (String, models::User, String, HashMap<Str
     let extracted_note_id: String = extract_noteid(note_id);
     let client: reqwest::Client = reqwest::Client::new();
     let url: String = URL.read().unwrap().clone();
+    let access_token: String = TOKEN.read().unwrap().clone();
+
     let res: models::Note = client
         .post(&format!("{}api/notes/show", url))
-        .json(&json!({ "noteId": extracted_note_id }))
+        .json(&json!({ "i": access_token, "noteId": extracted_note_id }))
         .send()
         .await.unwrap()
         .json()
@@ -34,16 +36,21 @@ async fn get_note(note_id: String) -> (String, models::User, String, HashMap<Str
 }
 
 #[tauri::command]
-async fn post(text: String) {
+async fn post(text: String) -> bool {
     let client: reqwest::Client = reqwest::Client::new();
     let url: String = URL.read().unwrap().clone();
     let access_token: String = TOKEN.read().unwrap().clone();
 
-    let _response: Result<reqwest::Response, reqwest::Error> = client
+    let res: Result<reqwest::Response, reqwest::Error> = client
         .post(&format!("{}api/notes/create", url))
         .json(&json!({ "i": access_token, "text": text }))
         .send()
         .await;
+
+    match res {
+        Ok(_) => true,
+        Err(_) => false,
+    }
 }
 
 #[tauri::command]

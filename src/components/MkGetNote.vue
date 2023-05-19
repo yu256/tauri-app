@@ -33,7 +33,7 @@ const name = shallowRef("");
 const url = shallowRef("");
 const token = shallowRef("");
 const emojis = shallowRef<Emoji[]>([]);
-let reactions = new Map<string, number>()
+let reactions = new Map<string, number>();
 let createdAt: string;
 let user: User;
 

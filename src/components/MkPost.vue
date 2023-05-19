@@ -18,6 +18,7 @@ async function post() {
 
 <style scoped>
 input {
-    padding: 5em;
+    width: 10em;
+    height: 5em;
 }
 </style>
