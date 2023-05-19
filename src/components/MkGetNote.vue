@@ -2,7 +2,8 @@
   <div>
     <input v-model="url" placeholder="Enter an Instance URL..." />
     <button type="button" @click="setURL()">Set</button>
-    <br>
+    <input v-model="token" placeholder="Enter a Token..." />
+    <button type="button" @click="setToken()">Set</button>
     <input v-model="name" placeholder="Enter a noteId..." />
     <button type="button" @click="getNote()">Get</button>
   </div>
@@ -30,6 +31,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 const note = shallowRef("");
 const name = shallowRef("");
 const url = shallowRef("");
+const token = shallowRef("");
 const emojis = shallowRef<Emoji[]>([]);
 let reactions = new Map<string, number>()
 let createdAt: string;
@@ -37,6 +39,10 @@ let user: User;
 
 function setURL() {
   invoke("set_url", { instanceurl: url.value });
+}
+
+function setToken() {
+    invoke("set_token", { token: token.value });
 }
 
 async function getNote() {
