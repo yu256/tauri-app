@@ -42,7 +42,7 @@ function setURL() {
 }
 
 function setToken() {
-    invoke("set_token", { token: token.value });
+  invoke("set_token", { token: token.value });
 }
 
 async function getNote() {
