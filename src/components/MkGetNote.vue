@@ -13,13 +13,17 @@
       <div class="icon">
         <img :src="user.avatarUrl">
       </div>
-      {{ user.name }} {{ user.username }}@{{ user.host }}<br>{{ note }}<br>{{ createdAt }}
+      <div class="notetext">
+        {{ user.name }} {{ user.username }}@{{ user.host }}<br>{{ note }}<br>{{ createdAt }}
+      </div>
     </div>
     <div class="emojis" v-for="(count, reaction) in reactions" :key="reaction">
       <img v-if="isCustomEmoji(reaction)" :src="getCustomEmojiURL(reaction).url"
         :alt="getCustomEmojiURL(reaction).alt">
       <span v-else>{{ reaction }}</span>
-      {{ count }}
+      <div>
+        {{ count }}
+      </div>
     </div>
   </div>
 </template>
@@ -86,15 +90,15 @@ interface Instance {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 img {
-  width: 3em;
-  height: 3em;
+  width: 5em;
+  height: 5em;
   float: left;
 }
 
 .note {
-  padding: 1em;
+  padding: 2em;
   border: solid;
   border-radius: 2em;
   display: flex;
@@ -102,8 +106,19 @@ img {
 }
 
 .emojis {
-  width: 3em;
-  height: 3em;
+  img {
+    width: 1em;
+    height: 1em;
+    padding: 0.5em;
+  }
+  div {
+    position: absolute;
+  }
   font-size: 3em;
+  position:  relative;
+}
+
+.notetext {
+  margin-left: 6em;
 }
 </style>
